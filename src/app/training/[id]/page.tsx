@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { trpc } from '@/lib/trpc/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -438,10 +440,10 @@ export default function TrainingModulePage({
               </CardHeader>
               <CardContent>
                 {currentSectionData.type === 'text' && (
-                  <div className="prose prose-sm max-w-none">
-                    <p className="whitespace-pre-wrap">
-                      {currentSectionData.content}
-                    </p>
+                  <div className="prose prose-sm max-w-none dark:prose-invert">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {currentSectionData.content || ''}
+                    </ReactMarkdown>
                   </div>
                 )}
 
@@ -473,10 +475,10 @@ export default function TrainingModulePage({
                       ))}
                     </div>
                     {currentSectionData.explanation && (
-                      <div className="p-4 bg-blue-50 rounded-lg">
-                        <p className="text-sm text-blue-800">
+                      <div className="p-4 bg-blue-50 rounded-lg prose prose-sm max-w-none prose-blue">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
                           {currentSectionData.explanation}
-                        </p>
+                        </ReactMarkdown>
                       </div>
                     )}
                   </div>

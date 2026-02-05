@@ -40,6 +40,8 @@ import {
   CheckCircle,
   Clock,
   Shield,
+  Upload,
+  FileEdit,
 } from 'lucide-react'
 import { formatDate, formatRelativeDate } from '@/lib/utils'
 
@@ -122,6 +124,18 @@ export default function DocumentsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={() => {
+              toast({
+                title: 'Coming Soon',
+                description: 'Document upload will be available in the next update.',
+              })
+            }}
+          >
+            <Upload className="mr-2 h-4 w-4" />
+            Upload Document
+          </Button>
           {!hasECP && (
             <Button onClick={() => setShowGenerateECP(true)}>
               <Sparkles className="mr-2 h-4 w-4" />
@@ -256,10 +270,34 @@ export default function DocumentsPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button variant="outline" size="sm" className="w-full">
-                    <Download className="mr-2 h-3 w-3" />
-                    Download PDF
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="default"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => {
+                        toast({
+                          title: 'Coming Soon',
+                          description: 'Form filling will be available in the next update.',
+                        })
+                      }}
+                    >
+                      <FileEdit className="mr-2 h-3 w-3" />
+                      Fill Out
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        toast({
+                          title: 'Coming Soon',
+                          description: 'PDF download will be available in the next update.',
+                        })
+                      }}
+                    >
+                      <Download className="h-3 w-3" />
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ))}

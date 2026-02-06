@@ -75,8 +75,8 @@ supabase/
 
 ### Open Dental API
 - Base URL: `https://api.opendental.com/api/v1/`
-- Auth: `Authorization: ODFHIR {DeveloperKey}/{CustomerKey}`
-- Test credentials: `Authorization: ODFHIR NFF6i0KrXrxDkZHt/VzkmZEaUWOjnQX2z`
+- Auth header format: `Authorization: ODFHIR {DeveloperKey}/{CustomerKey}`
+- Credentials: stored in environment variables (`OPEN_DENTAL_DEVELOPER_KEY`, per-practice customer keys encrypted in Supabase). See `.env.example` for placeholders.
 - Key endpoints: Appointments (GET/POST/PUT), Patients (GET/POST), Operatories (GET), Providers (GET), Schedules (GET), Commlogs (POST), Subscriptions (POST for webhooks)
 - Rate limit: 1 req/sec with write permissions
 - Cost: $30/location/month billed to us
@@ -106,10 +106,12 @@ supabase/
 
 ## Current State (as of Feb 2026)
 
-The existing DentalGuard codebase has these known issues that must be fixed FIRST:
-1. tRPC v10 is incompatible with React Query v5 (`hashQueryKey` import error). Must upgrade to tRPC v11.
-2. Next.js 14.1.4 has a known security vulnerability. Must upgrade to Next.js 15.
-3. Google Fonts (Inter) fails to load in some environments. Switch to self-hosted font or Geist.
+Resolved issues:
+1. ~~tRPC v10 is incompatible with React Query v5~~ — Upgraded to tRPC v11. Removed unused `@trpc/next`.
+2. ~~Next.js 14.1.4 has a known security vulnerability~~ — Upgraded to Next.js 15.5.12. Async `cookies()`/`headers()`/`params` APIs updated throughout.
+3. ~~Google Fonts (Inter) fails to load~~ — Replaced with local Geist font via `geist` package (`GeistSans` from `geist/font/sans`).
+
+Remaining issues:
 4. Supabase migrations may not have been applied to the production database.
 5. Tailwind styles may not render until `.next` cache is cleared.
 

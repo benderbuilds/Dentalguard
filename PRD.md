@@ -185,11 +185,13 @@ Future metrics:
 -- Add columns: plan, timezone, slug
 
 -- Open Dental integration
+-- NOTE: The Open Dental developer API key is a platform-wide secret.
+-- Store it as an environment variable (OPEN_DENTAL_DEVELOPER_KEY), NOT in the database.
+-- Only per-practice customer keys are stored here (encrypted).
 CREATE TABLE open_dental_configs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   practice_id UUID REFERENCES practices(id) ON DELETE CASCADE UNIQUE,
-  customer_api_key_encrypted TEXT NOT NULL,
-  developer_api_key TEXT NOT NULL, -- our key, same for all
+  customer_api_key_encrypted TEXT NOT NULL, -- encrypted via Supabase Vault or app-level encryption
   is_active BOOLEAN DEFAULT false,
   last_sync_at TIMESTAMPTZ,
   webhook_subscription_id TEXT, -- Open Dental subscription ID
@@ -278,6 +280,7 @@ CREATE TABLE conversations (
 -- Individual messages within conversations
 CREATE TABLE messages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  practice_id UUID REFERENCES practices(id) ON DELETE CASCADE NOT NULL,
   conversation_id UUID REFERENCES conversations(id) ON DELETE CASCADE,
   role TEXT NOT NULL CHECK (role IN ('user', 'assistant', 'system', 'staff')),
   content TEXT NOT NULL,
@@ -312,7 +315,7 @@ CREATE TABLE morning_summaries (
   UNIQUE(practice_id, summary_date)
 );
 
--- RLS policies for all new tables
+-- RLS: enable on all new tables
 ALTER TABLE open_dental_configs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE od_providers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE od_operatories ENABLE ROW LEVEL SECURITY;
@@ -323,12 +326,35 @@ ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE intake_submissions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE morning_summaries ENABLE ROW LEVEL SECURITY;
 
--- Example RLS policy (repeat pattern for all tables)
-CREATE POLICY "Users can only access their practice data"
-  ON conversations FOR ALL
-  USING (practice_id IN (
-    SELECT practice_id FROM practice_members WHERE user_id = auth.uid()
-  ));
+-- RLS policies: every table uses the same practice_members check.
+-- Users can only access rows belonging to practices they are a member of.
+
+CREATE POLICY "practice_isolation" ON open_dental_configs FOR ALL
+  USING (practice_id IN (SELECT practice_id FROM practice_members WHERE user_id = auth.uid()));
+
+CREATE POLICY "practice_isolation" ON od_providers FOR ALL
+  USING (practice_id IN (SELECT practice_id FROM practice_members WHERE user_id = auth.uid()));
+
+CREATE POLICY "practice_isolation" ON od_operatories FOR ALL
+  USING (practice_id IN (SELECT practice_id FROM practice_members WHERE user_id = auth.uid()));
+
+CREATE POLICY "practice_isolation" ON od_appointment_types FOR ALL
+  USING (practice_id IN (SELECT practice_id FROM practice_members WHERE user_id = auth.uid()));
+
+CREATE POLICY "practice_isolation" ON chatbot_configs FOR ALL
+  USING (practice_id IN (SELECT practice_id FROM practice_members WHERE user_id = auth.uid()));
+
+CREATE POLICY "practice_isolation" ON conversations FOR ALL
+  USING (practice_id IN (SELECT practice_id FROM practice_members WHERE user_id = auth.uid()));
+
+CREATE POLICY "practice_isolation" ON messages FOR ALL
+  USING (practice_id IN (SELECT practice_id FROM practice_members WHERE user_id = auth.uid()));
+
+CREATE POLICY "practice_isolation" ON intake_submissions FOR ALL
+  USING (practice_id IN (SELECT practice_id FROM practice_members WHERE user_id = auth.uid()));
+
+CREATE POLICY "practice_isolation" ON morning_summaries FOR ALL
+  USING (practice_id IN (SELECT practice_id FROM practice_members WHERE user_id = auth.uid()));
 ```
 
 ---
@@ -339,16 +365,23 @@ CREATE POLICY "Users can only access their practice data"
 
 ```
 POST /api/chat
-  Body: { embedKey, sessionId, message, conversationHistory[] }
+  Body: { embedKey, sessionId, message }
   Returns: { response, conversationId, metadata }
+
+  IMPORTANT: Conversation history is loaded server-side from the messages table
+  using the sessionId. The client sends only the new message, never prior history.
+  This prevents prompt injection attacks where an attacker could fabricate
+  assistant/system messages to bypass safety guardrails or extract the system prompt.
 
   This is the main chatbot endpoint. It:
   1. Validates embedKey against chatbot_configs
   2. Loads practice context (hours, insurance, providers, FAQs)
-  3. Sends conversation to Claude with practice-specific system prompt
-  4. If Claude determines scheduling intent + OD is connected: calls Open Dental API
-  5. Stores message in database
-  6. Returns AI response
+  3. Loads conversation history from the messages table (by sessionId + embedKey)
+  4. Stores the new user message in the database
+  5. Sends full conversation to Claude with practice-specific system prompt
+  6. If Claude determines scheduling intent + OD is connected: calls Open Dental API
+  7. Stores the assistant response in the database
+  8. Returns AI response
 
 GET /api/widget/config?key={embedKey}
   Returns: { botName, welcomeMessage, primaryColor, logoUrl, officeHours }
@@ -439,7 +472,7 @@ The base prompt should instruct the AI to:
 3. Renders floating button with practice's primary color
 4. On click → opens chat window
 5. Generates a session ID (stored in localStorage)
-6. On each message → POST to `/api/chat` with full conversation history
+6. On each message → POST to `/api/chat` with the new message only (server loads history)
 7. Displays AI response with typing indicator
 8. If patient provides contact info → conversation status updates to "lead"
 9. If appointment is booked → conversation status updates to "booked"

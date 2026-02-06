@@ -26,7 +26,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Shield className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-primary">DentalGuard</span>
+            <span className="text-xl font-bold text-primary">DentalPilot</span>
           </div>
           <div className="flex items-center gap-4">
             <Button variant="ghost" asChild>
@@ -80,7 +80,7 @@ export default function HomePage() {
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             From automatic training reminders to instant inspection packets,
-            DentalGuard handles it all.
+            DentalPilot handles it all.
           </p>
         </div>
 
@@ -216,10 +216,10 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <Shield className="h-6 w-6 text-primary" />
-              <span className="font-bold text-primary">DentalGuard</span>
+              <span className="font-bold text-primary">DentalPilot</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              &copy; {new Date().getFullYear()} DentalGuard. All rights reserved.
+              &copy; {new Date().getFullYear()} DentalPilot. All rights reserved.
             </p>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <Link href="/privacy" className="hover:text-foreground">

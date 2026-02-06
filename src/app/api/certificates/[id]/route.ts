@@ -11,7 +11,7 @@ export async function GET(
   const { id } = await params
 
   // Authenticate via Supabase cookies
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
 
   if (authError || !user) {

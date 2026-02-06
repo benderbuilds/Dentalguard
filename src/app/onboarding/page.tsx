@@ -190,7 +190,7 @@ export default function OnboardingPage() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Shield className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold text-primary">DentalGuard</span>
+            <span className="text-2xl font-bold text-primary">DentalPilot</span>
           </div>
           <h1 className="text-2xl font-bold">Set Up Your Practice</h1>
           <p className="text-muted-foreground">

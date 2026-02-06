@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, use } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { trpc } from '@/lib/trpc/client'
@@ -57,9 +57,9 @@ import { AssignTrainingDialog } from '@/components/training/assign-training-dial
 export default function EmployeeDetailPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
-  const { id } = params
+  const { id } = use(params)
   const router = useRouter()
   const { toast } = useToast()
   const [assignDialogOpen, setAssignDialogOpen] = useState(false)

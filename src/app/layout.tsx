@@ -1,13 +1,11 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { GeistSans } from 'geist/font/sans'
 import './globals.css'
 import { TRPCProvider } from '@/lib/trpc/provider'
 import { Toaster } from '@/components/ui/toaster'
 
-const inter = Inter({ subsets: ['latin'] })
-
 export const metadata: Metadata = {
-  title: 'DentalGuard - Compliance Autopilot for Dental Practices',
+  title: 'DentalPilot - AI-Powered Practice Operations for Dental Offices',
   description:
     'Never worry about OSHA/HIPAA compliance again. We automate everything, so you can\'t get fined.',
 }
@@ -19,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={GeistSans.className}>
         <TRPCProvider>
           {children}
           <Toaster />

@@ -6,8 +6,8 @@ import { createCallerFactory } from '@/server/trpc'
 import { createTRPCContext } from '@/server/trpc'
 import { appRouter } from '@/server/routers'
 
-const createContext = cache(() => {
-  const heads = new Headers(headers())
+const createContext = cache(async () => {
+  const heads = new Headers(await headers())
   heads.set('x-trpc-source', 'rsc')
   return createTRPCContext({ headers: heads })
 })

@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import type { Database } from '@/lib/supabase/database.types'
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   let dbUser = null

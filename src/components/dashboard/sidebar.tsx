@@ -58,7 +58,7 @@ export function Sidebar({ complianceStats }: SidebarProps) {
       <div className="flex items-center h-16 px-6 border-b">
         <Link href="/dashboard" className="flex items-center gap-2">
           <Shield className="h-8 w-8 text-primary" />
-          <span className="text-xl font-bold text-primary">DentalGuard</span>
+          <span className="text-xl font-bold text-primary">DentalPilot</span>
         </Link>
       </div>
 

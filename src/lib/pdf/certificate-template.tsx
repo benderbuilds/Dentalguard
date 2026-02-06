@@ -184,7 +184,7 @@ export function CertificateDocument({ data }: { data: CertificateData }) {
           <View style={styles.innerBorder}>
             {/* Header */}
             <View style={styles.header}>
-              <Text style={styles.brandName}>DentalGuard</Text>
+              <Text style={styles.brandName}>DentalPilot</Text>
               <Text style={styles.practiceName}>{data.practiceName}</Text>
             </View>
 

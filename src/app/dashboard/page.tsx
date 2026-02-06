@@ -22,7 +22,7 @@ import Link from 'next/link'
 import { formatDate, formatRelativeDate } from '@/lib/utils'
 
 export default async function DashboardPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const {
     data: { user },

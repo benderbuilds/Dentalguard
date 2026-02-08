@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DentalPilot Widget Test</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      color: #333;
+    }
+    h1 { margin-bottom: 8px; }
+    p { color: #666; margin-bottom: 24px; }
+    .instructions {
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .instructions h3 { margin-bottom: 8px; }
+    .instructions ol { padding-left: 20px; }
+    .instructions li { margin-bottom: 6px; line-height: 1.5; }
+    code {
+      background: #e9ecef;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    .sample-content {
+      margin-top: 40px;
+      padding: 40px;
+      background: #fafafa;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>DentalPilot Widget Test Page</h1>
+  <p>This page loads the chatbot widget for testing against a local dev server.</p>
+
+  <div class="instructions">
+    <h3>Setup</h3>
+    <ol>
+      <li>Start the Next.js dev server: <code>npm run dev</code> (from the project root)</li>
+      <li>Build the widget: <code>cd widget && npm run build</code></li>
+      <li>Replace <code>YOUR_EMBED_KEY</code> below with a real embed key from your <code>chatbot_configs</code> table</li>
+      <li>Open this file in a browser (or use <code>npx serve widget/</code>)</li>
+    </ol>
+  </div>
+
+  <div class="sample-content">
+    <h2>Sample Dental Practice Website</h2>
+    <p>This is placeholder content simulating a dental practice website. The chatbot widget should appear as a floating button in the bottom-right corner.</p>
+    <p>Click the chat bubble to open the widget and test conversations.</p>
+  </div>
+
+  <!--
+    Replace YOUR_EMBED_KEY with a real embed key from your chatbot_configs table.
+    The widget derives the API base URL from the script src origin.
+    For local testing, point src to localhost:3000 where Next.js is running.
+  -->
+  <script
+    src="http://localhost:3000/dentalpilot-widget.js"
+    data-key="YOUR_EMBED_KEY"
+    async
+  ></script>
+</body>
+</html>

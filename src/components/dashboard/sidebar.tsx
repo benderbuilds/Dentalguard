@@ -22,6 +22,10 @@ import {
   MessageSquare,
   Database,
   Sparkles,
+  Settings,
+  Shield,
+  AlertTriangle,
+  MessageSquare,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -110,6 +114,14 @@ const NAV_SECTIONS: NavSection[] = [
     href: '/insights',
     requiredPlan: 'complete',
     items: [],
+    name: 'Engage',
+    href: '/dashboard/engage',
+    icon: MessageSquare,
+  },
+  {
+    name: 'Settings',
+    href: '/dashboard/settings',
+    icon: Settings,
   },
 ]
 

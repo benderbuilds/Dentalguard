@@ -10,12 +10,11 @@ export default defineConfig({
       fileName: () => 'dentalpilot-widget.js',
       formats: ['iife'],
     },
-    rollupOptions: {
-      // Bundle everything (React included) into a single file
-    },
+    target: 'es2020',
+    minify: 'esbuild',
     cssCodeSplit: false,
-    outDir: '../public',
-    emptyOutDir: false,
+    outDir: 'dist',
+    emptyOutDir: true,
   },
   define: {
     'process.env.NODE_ENV': JSON.stringify('production'),

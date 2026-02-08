@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import type { WidgetConfig } from './types'
+import { fetchWidgetConfig } from './api'
 import { ChatWindow } from './ChatWindow'
-
-interface WidgetConfig {
-  botName: string
-  welcomeMessage: string
-  primaryColor: string
-  logoUrl: string | null
-  practiceName: string
-}
 
 interface WidgetProps {
   embedKey: string
@@ -20,19 +14,13 @@ export function Widget({ embedKey, apiBaseUrl }: WidgetProps) {
   const [error, setError] = useState(false)
 
   useEffect(() => {
-    fetch(`${apiBaseUrl}/api/widget/config?key=${embedKey}`)
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to load config')
-        return res.json()
-      })
+    fetchWidgetConfig(apiBaseUrl, embedKey)
       .then((data) => setConfig(data))
       .catch(() => setError(true))
   }, [apiBaseUrl, embedKey])
 
   if (error || !config) {
     // Don't render anything if config fails — silent failure
-    if (error) return null
-    // Still loading
     return null
   }
 

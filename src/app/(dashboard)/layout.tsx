@@ -17,7 +17,7 @@ export default async function DashboardLayout({
     redirect('/login')
   }
 
-  // Get user details with organization and practice (use admin client to bypass RLS)
+  // Get user details with organization and practice (admin client bypasses RLS)
   const adminSupabase = createAdminClient()
   const { data: dbUser } = await adminSupabase
     .from('users')
@@ -46,7 +46,9 @@ export default async function DashboardLayout({
         plan="engage"
       />
       <div className="flex-1 flex flex-col min-w-0">
-        <main className="flex-1 p-4 pt-[72px] md:p-6 md:pt-6">{children}</main>
+        <main className="flex-1 p-4 pt-[72px] md:p-6 lg:p-8 md:pt-6 lg:pt-8">
+          {children}
+        </main>
       </div>
     </div>
   )

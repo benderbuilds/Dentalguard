@@ -10,6 +10,7 @@ import {
   Settings,
   Shield,
   AlertTriangle,
+  MessageSquare,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -34,6 +35,11 @@ const navigation = [
     name: 'Documents',
     href: '/dashboard/documents',
     icon: FileText,
+  },
+  {
+    name: 'Engage',
+    href: '/dashboard/engage',
+    icon: MessageSquare,
   },
   {
     name: 'Settings',

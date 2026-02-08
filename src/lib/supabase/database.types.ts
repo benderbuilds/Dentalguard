@@ -782,6 +782,395 @@ export type Database = {
           },
         ]
       }
+      open_dental_configs: {
+        Row: {
+          id: string
+          practice_id: string
+          customer_api_key_encrypted: string
+          is_active: boolean
+          last_sync_at: string | null
+          sync_error: string | null
+          webhook_subscription_id: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          practice_id: string
+          customer_api_key_encrypted: string
+          is_active?: boolean
+          last_sync_at?: string | null
+          sync_error?: string | null
+          webhook_subscription_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          practice_id?: string
+          customer_api_key_encrypted?: string
+          is_active?: boolean
+          last_sync_at?: string | null
+          sync_error?: string | null
+          webhook_subscription_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "open_dental_configs_practice_id_fkey"
+            columns: ["practice_id"]
+            isOneToOne: true
+            referencedRelation: "practices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      od_providers: {
+        Row: {
+          id: string
+          practice_id: string
+          od_provider_num: number
+          abbr: string | null
+          first_name: string | null
+          last_name: string | null
+          is_hygienist: boolean
+          is_hidden: boolean
+          synced_at: string
+        }
+        Insert: {
+          id?: string
+          practice_id: string
+          od_provider_num: number
+          abbr?: string | null
+          first_name?: string | null
+          last_name?: string | null
+          is_hygienist?: boolean
+          is_hidden?: boolean
+          synced_at?: string
+        }
+        Update: {
+          id?: string
+          practice_id?: string
+          od_provider_num?: number
+          abbr?: string | null
+          first_name?: string | null
+          last_name?: string | null
+          is_hygienist?: boolean
+          is_hidden?: boolean
+          synced_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "od_providers_practice_id_fkey"
+            columns: ["practice_id"]
+            isOneToOne: false
+            referencedRelation: "practices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      od_operatories: {
+        Row: {
+          id: string
+          practice_id: string
+          od_operatory_num: number
+          op_name: string | null
+          provider_num: number | null
+          hygienist_num: number | null
+          is_hidden: boolean
+          synced_at: string
+        }
+        Insert: {
+          id?: string
+          practice_id: string
+          od_operatory_num: number
+          op_name?: string | null
+          provider_num?: number | null
+          hygienist_num?: number | null
+          is_hidden?: boolean
+          synced_at?: string
+        }
+        Update: {
+          id?: string
+          practice_id?: string
+          od_operatory_num?: number
+          op_name?: string | null
+          provider_num?: number | null
+          hygienist_num?: number | null
+          is_hidden?: boolean
+          synced_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "od_operatories_practice_id_fkey"
+            columns: ["practice_id"]
+            isOneToOne: false
+            referencedRelation: "practices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      od_appointment_types: {
+        Row: {
+          id: string
+          practice_id: string
+          od_appointment_type_num: number
+          type_name: string | null
+          pattern: string | null
+          synced_at: string
+        }
+        Insert: {
+          id?: string
+          practice_id: string
+          od_appointment_type_num: number
+          type_name?: string | null
+          pattern?: string | null
+          synced_at?: string
+        }
+        Update: {
+          id?: string
+          practice_id?: string
+          od_appointment_type_num?: number
+          type_name?: string | null
+          pattern?: string | null
+          synced_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "od_appointment_types_practice_id_fkey"
+            columns: ["practice_id"]
+            isOneToOne: false
+            referencedRelation: "practices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chatbot_configs: {
+        Row: {
+          id: string
+          practice_id: string
+          embed_key: string
+          is_active: boolean
+          bot_name: string
+          welcome_message: string
+          primary_color: string
+          logo_url: string | null
+          office_hours: Json
+          accepted_insurance: Json
+          services: Json
+          providers_display: Json
+          custom_faqs: Json
+          system_prompt_additions: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          practice_id: string
+          embed_key?: string
+          is_active?: boolean
+          bot_name?: string
+          welcome_message?: string
+          primary_color?: string
+          logo_url?: string | null
+          office_hours?: Json
+          accepted_insurance?: Json
+          services?: Json
+          providers_display?: Json
+          custom_faqs?: Json
+          system_prompt_additions?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          practice_id?: string
+          embed_key?: string
+          is_active?: boolean
+          bot_name?: string
+          welcome_message?: string
+          primary_color?: string
+          logo_url?: string | null
+          office_hours?: Json
+          accepted_insurance?: Json
+          services?: Json
+          providers_display?: Json
+          custom_faqs?: Json
+          system_prompt_additions?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chatbot_configs_practice_id_fkey"
+            columns: ["practice_id"]
+            isOneToOne: true
+            referencedRelation: "practices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conversations: {
+        Row: {
+          id: string
+          practice_id: string
+          embed_key: string
+          session_id: string
+          status: string
+          patient_name: string | null
+          patient_email: string | null
+          patient_phone: string | null
+          patient_dob: string | null
+          insurance_carrier: string | null
+          reason_for_visit: string | null
+          is_new_patient: boolean | null
+          is_after_hours: boolean
+          od_patient_num: number | null
+          od_appointment_num: number | null
+          metadata: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          practice_id: string
+          embed_key: string
+          session_id: string
+          status?: string
+          patient_name?: string | null
+          patient_email?: string | null
+          patient_phone?: string | null
+          patient_dob?: string | null
+          insurance_carrier?: string | null
+          reason_for_visit?: string | null
+          is_new_patient?: boolean | null
+          is_after_hours?: boolean
+          od_patient_num?: number | null
+          od_appointment_num?: number | null
+          metadata?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          practice_id?: string
+          embed_key?: string
+          session_id?: string
+          status?: string
+          patient_name?: string | null
+          patient_email?: string | null
+          patient_phone?: string | null
+          patient_dob?: string | null
+          insurance_carrier?: string | null
+          reason_for_visit?: string | null
+          is_new_patient?: boolean | null
+          is_after_hours?: boolean
+          od_patient_num?: number | null
+          od_appointment_num?: number | null
+          metadata?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_practice_id_fkey"
+            columns: ["practice_id"]
+            isOneToOne: false
+            referencedRelation: "practices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          id: string
+          practice_id: string
+          conversation_id: string
+          role: string
+          content: string
+          metadata: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          practice_id: string
+          conversation_id: string
+          role: string
+          content: string
+          metadata?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          practice_id?: string
+          conversation_id?: string
+          role?: string
+          content?: string
+          metadata?: Json
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_practice_id_fkey"
+            columns: ["practice_id"]
+            isOneToOne: false
+            referencedRelation: "practices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      morning_summaries: {
+        Row: {
+          id: string
+          practice_id: string
+          summary_date: string
+          total_conversations: number
+          new_leads: number
+          appointments_booked: number
+          summary_html: string | null
+          sent_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          practice_id: string
+          summary_date: string
+          total_conversations?: number
+          new_leads?: number
+          appointments_booked?: number
+          summary_html?: string | null
+          sent_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          practice_id?: string
+          summary_date?: string
+          total_conversations?: number
+          new_leads?: number
+          appointments_booked?: number
+          summary_html?: string | null
+          sent_at?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "morning_summaries_practice_id_fkey"
+            columns: ["practice_id"]
+            isOneToOne: false
+            referencedRelation: "practices"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

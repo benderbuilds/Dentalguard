@@ -15,6 +15,35 @@ const CORS_HEADERS = {
 const RATE_LIMIT_MAX = 30
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000 // 1 hour
 
+// In-memory rate limit store (per-IP). Resets on serverless cold start,
+// but provides best-effort protection against abuse.
+const rateLimitStore = new Map<string, { count: number; resetAt: number }>()
+
+function checkRateLimit(key: string): boolean {
+  const now = Date.now()
+  const entry = rateLimitStore.get(key)
+
+  if (!entry || now >= entry.resetAt) {
+    rateLimitStore.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS })
+    return true
+  }
+
+  if (entry.count >= RATE_LIMIT_MAX) {
+    return false
+  }
+
+  entry.count++
+  return true
+}
+
+function getClientIp(request: NextRequest): string {
+  return (
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    'unknown'
+  )
+}
+
 /**
  * POST /api/chat
  *
@@ -80,23 +109,12 @@ export async function POST(request: NextRequest) {
     timezone: string | null
   }
 
-  // 2. Rate limiting: max 30 messages per session per hour
-  const oneHourAgo = new Date(Date.now() - RATE_LIMIT_WINDOW_MS).toISOString()
-  const { count: recentMsgCount } = await supabase
-    .from('messages')
-    .select('id', { count: 'exact', head: true })
-    .eq('conversation_id', (
-      // Get conversation IDs for this session
-      await supabase
-        .from('conversations')
-        .select('id')
-        .eq('embed_key', embedKey)
-        .eq('session_id', sessionId)
-    ).data?.[0]?.id ?? '00000000-0000-0000-0000-000000000000')
-    .eq('role', 'user')
-    .gte('created_at', oneHourAgo)
+  // 2. Rate limiting: per-IP and per-embed-key (30 messages/hour each)
+  const clientIp = getClientIp(request)
+  const ipAllowed = checkRateLimit(`ip:${clientIp}`)
+  const embedKeyAllowed = checkRateLimit(`embed:${embedKey}:${clientIp}`)
 
-  if ((recentMsgCount ?? 0) >= RATE_LIMIT_MAX) {
+  if (!ipAllowed || !embedKeyAllowed) {
     return new Response(
       JSON.stringify({ error: 'Rate limit exceeded. Please try again later.' }),
       { status: 429, headers: { 'Content-Type': 'application/json', ...CORS_HEADERS } }

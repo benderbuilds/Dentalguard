@@ -40,7 +40,6 @@ interface DoneMetadata {
 
 export default function TestChatPage() {
   const { data: config, isLoading: configLoading } = trpc.engage.getChatbotConfig.useQuery()
-  const { data: embedData } = trpc.engage.getEmbedCode.useQuery()
 
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')

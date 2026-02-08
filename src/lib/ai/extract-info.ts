@@ -128,7 +128,7 @@ export function mergePatientInfo(
 
   for (const key of Object.keys(extracted) as (keyof ExtractedPatientInfo)[]) {
     const newVal = extracted[key]
-    if (newVal !== null && newVal !== undefined && !merged[key]) {
+    if (newVal !== null && newVal !== undefined && (merged[key] === null || merged[key] === undefined)) {
       ;(merged as Record<string, unknown>)[key] = newVal
     }
   }

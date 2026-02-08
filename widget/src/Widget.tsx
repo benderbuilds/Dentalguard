@@ -14,9 +14,15 @@ export function Widget({ embedKey, apiBaseUrl }: WidgetProps) {
   const [error, setError] = useState(false)
 
   useEffect(() => {
-    fetchWidgetConfig(apiBaseUrl, embedKey)
-      .then((data) => setConfig(data))
-      .catch(() => setError(true))
+    const loadConfig = async () => {
+      try {
+        const data = await fetchWidgetConfig(apiBaseUrl, embedKey)
+        setConfig(data)
+      } catch {
+        setError(true)
+      }
+    }
+    loadConfig()
   }, [apiBaseUrl, embedKey])
 
   if (error || !config) {

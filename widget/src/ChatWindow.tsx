@@ -121,7 +121,7 @@ export function ChatWindow({ embedKey, apiBaseUrl, config, onClose }: ChatWindow
   }
 
   const color = config.primaryColor || '#2563eb'
-  const showTyping = isLoading && !messages.some((m) => m.id.startsWith('assistant-') && m.content === '')
+  const showTyping = isLoading && !messages.some((m) => m.id.startsWith('assistant-'))
 
   return (
     <div className="dp-chat-window">

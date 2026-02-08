@@ -166,6 +166,26 @@ export const engageRouter = router({
       return { leads: data ?? [], total: count ?? 0 }
     }),
 
+  /** Get embed code for the practice's chatbot widget */
+  getEmbedCode: protectedProcedure.query(async ({ ctx }) => {
+    const practiceId = ctx.dbUser.practice_id
+    if (!practiceId) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No practice associated' })
+
+    const { data, error } = await ctx.supabase
+      .from('chatbot_configs')
+      .select('embed_key')
+      .eq('practice_id', practiceId)
+      .single()
+
+    if (error && error.code !== 'PGRST116') throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: error.message })
+
+    const embedKey = data?.embed_key ?? null
+    if (!embedKey) return { embedKey: null, scriptTag: null }
+
+    const scriptTag = `<script src="https://widget.dentalpilot.com/chat.js" data-embed-key="${embedKey}" async></script>`
+    return { embedKey, scriptTag }
+  }),
+
   /** Get dashboard stats */
   getDashboardStats: protectedProcedure.query(async ({ ctx }) => {
     const practiceId = ctx.dbUser.practice_id

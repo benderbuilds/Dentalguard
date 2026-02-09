@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { router, protectedProcedure, adminProcedure } from '../trpc'
 import { TRPCError } from '@trpc/server'
+import { createAdminClient } from '@/lib/supabase/server'
 
 export const engageRouter = router({
   /** Get chatbot config for the current practice */
@@ -50,7 +51,9 @@ export const engageRouter = router({
       if (!practiceId) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No practice associated' })
 
       // Upsert: create if doesn't exist, update if it does
-      const { data, error } = await ctx.supabase
+      // Use admin client to bypass RLS for server-side mutations
+      const adminSupabase = createAdminClient()
+      const { data, error } = await adminSupabase
         .from('chatbot_configs')
         .upsert(
           { practice_id: practiceId, ...input },
@@ -146,7 +149,8 @@ export const engageRouter = router({
       if (!practiceId) throw new TRPCError({ code: 'BAD_REQUEST', message: 'No practice associated' })
 
       const { id, ...updates } = input
-      const { data, error } = await ctx.supabase
+      const adminSupabase = createAdminClient()
+      const { data, error } = await adminSupabase
         .from('conversations')
         .update(updates)
         .eq('id', id)
@@ -205,7 +209,8 @@ export const engageRouter = router({
 
       if (convError || !conv) throw new TRPCError({ code: 'NOT_FOUND', message: 'Conversation not found' })
 
-      const { data, error } = await ctx.supabase
+      const adminSupabase = createAdminClient()
+      const { data, error } = await adminSupabase
         .from('messages')
         .insert({
           practice_id: practiceId,
